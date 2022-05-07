@@ -6,10 +6,16 @@
 //     age: 30
 // };
 
-const person = {
-    name: "Hery Sehastian",
-    age: 30,
-    hobbies: ['sports', 'cooking']
-};
+// const person: {
+//     name: string;
+//     age: number;
+//     hobbies: string[];
+//     roles: [number, string];
+// } = {
+//     name: "Hery Sehastian",
+//     age: 30,
+//     hobbies: ['sports', 'cooking'],
+//     roles: [1, 'author']
+// };
 
-console.log(person);
+// console.log(person);
