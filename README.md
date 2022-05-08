@@ -394,3 +394,73 @@ combineFunction = printResult; // IDE will complaint because the function not sa
 
 console.log(combineFunction(10, 30));
 ```
+
+- Function Type & Callbacks
+```typescript
+function addAndHandle(num1: number, num2: number, cb: (result: number) => void) {
+    const result = num1 + num2;
+    cb(result);
+}
+
+// Notes: if we trying to passing more then 1 parameter to function IDE will giving us an error
+// it because we clearly define that the callback only require 1 parameter,
+// but if we try to giving return value to the callback like `return result;`
+// the IDE will not giving any error message this because the return value will be ignored by typescript
+// this happen because we already define the callback return `void`
+addAndHandle(10, 20, (result) => {
+    console.log(result);
+});
+```
+
+- `unknown`: It's almost same like type `any` but it require type checking before we can assign it to variable. If possible we need to avoid using `uknown` type. Most of the time we many be just need to use Union Type, but for rare case when we really cannot predict the value we can use `unknown` type
+Using type `any`
+```typescript
+let userInput: any;
+let userName: string;
+
+userInput = 5;
+userInput = "Hery";
+userName = userInput; // here we will not get any error because IDE will ignore type checking for `any` type
+```
+Using type `unknown`
+```typescript
+let userInput: unknown;
+let userName: string;
+
+userInput = 5;
+userInput = "Hery";
+userName = userInput; // here we will get error
+```
+To prevent error when assigning `unknown` type value to variable, we need to do manual type checking using `typeof`
+```typescript
+let userInput: unknown;
+let userName: string;
+
+userInput = 5;
+userInput = "Hery";
+
+if (typeof userInput === 'string') {
+    userName = userInput; // here dont get error anymore
+}
+```
+
+- `never`: Is a type that usually used as function return type, it's almost same like `void` but without return `undefined` value and it cancel the script execution
+using `void`
+```typescript
+function generateError(message: string, code: number): void {
+    throw {message: message, errorCode: code};
+}
+
+const result = generateError("An error occurred!", 500);
+console.log(result); // the console log still executed and will return "undefined" value
+```
+using `never`
+```typescript
+function generateError(message: string, code: number): never {
+    throw {message: message, errorCode: code};
+}
+
+const result = generateError("An error occurred!", 500);
+console.log(result); // the console.log is never been executed
+```
+Here useful link from official typescript website: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
