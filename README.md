@@ -464,3 +464,14 @@ const result = generateError("An error occurred!", 500);
 console.log(result); // the console.log is never been executed
 ```
 Here useful link from official typescript website: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
+
+## Config
+1. To avoid keep execute `tsc app.ts` to compile the typescript whenever there is new changes, we use "watch mode" by adding `--watch` or `-w` at the end of command e.g. `tsc app.ts -w`
+2. To compile more than 1 files, we need to tell typescript that this folder is typescript project so we should run `tsc --init` (only once), then execute `tsc -w`
+Links :
+https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
+https://www.typescriptlang.org/docs/handbook/compiler-options.html
+https://code.visualstudio.com/docs/typescript/typescript-debugging
+
+
+## Modern Javascript
