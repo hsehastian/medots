@@ -475,3 +475,94 @@ https://code.visualstudio.com/docs/typescript/typescript-debugging
 
 
 ## Modern Javascript
+- Arrow function
+```typescript
+const add = function(a: number, b: number) {
+    return a+b;
+}
+
+// is equal to
+const add = (a: number, b: number) => {
+    return a+b;
+}
+
+// shorter syntax
+const add = (a: number, b: number) => a + b;
+```
+- Spread Operator: to use this operator it start with `...` before the object
+use case for Array
+```typescript
+const hobbies = ['Sports', 'Cooking'];
+const activeHobbies = ['Hiking'];
+
+// if we want to push `hobbies` to `activeHobbies` usually we will use push each element of `hobbies` one by one
+activeHobbies.push(hobbies[0], hobbies[1]);
+
+// with spread operator we can simplfied like below
+activeHobbies.push(...hobbies);
+
+// or can also like this
+const favoriteHobbies = ['Hiking', ...hobbies];
+```
+use case for Object
+```typescript
+const person = {
+    name: "Hery",
+    age: 30
+};
+
+// we can use spread operator if we want to copy person object
+const copiedPerson = { ...person }
+```
+- Rest Parameters: almost same like spread operator but this used in function
+```typescript
+const add = (...numbers: number[]) => {
+    return numbers.reduce((a, b) => {
+        return a + b;
+    }, 0);
+};
+
+// now the `add` function can accept many number parameter
+const addNumbers = add(5, 10, 2, 3.5)
+console.log(addNumbers);
+```
+- Array & Object Destructuring
+use case for Array
+```typescript
+const hobbies = ['Sports', 'Cooking'];
+
+// normaly we will do this
+const hooby1 = hobbies[0];
+const hobby2 = hobbies[1];
+
+// using Array Destructuring
+const [hobby1, hobby2] = hobbies;
+console.log(hobby1); // output: "Sports"
+console.log(hobby2); // output: "Cooking"
+
+// we also can use spread operator incase `hobbies` contain more than 2 element
+// the rest of `hobbies` element will be stored in `remainingHobbies` as Array
+const [hobby1, hobby2, ...remainingHobbies] = hobbies;
+console.log(hobby1); // output: "Sports"
+console.log(hobby2); // output: "Cooking"
+console.log(remainingHobbies); // output: ["etc", "etc", "etc"] (if hobbies contain more element)
+```
+use case for Object
+```typescript
+const person = {
+    firstName: "Hery",
+    age: 30
+};
+
+// normally we will do this
+const firstName = person.firstName;
+const age = person.age
+
+// using Object Destructuring, please note that the variable name must be same with the object property name
+// for this case variable firstName must be same with property firstName in person object
+const { firstName, age } = person
+console.log(firstName); // output: "Hery"
+console.log(age); // output: 30
+```
+Links:
+https://github.com/lukehoban/es6features
