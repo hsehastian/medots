@@ -566,3 +566,307 @@ console.log(age); // output: 30
 ```
 Links:
 https://github.com/lukehoban/es6features
+
+
+## Classes & Interfaces
+### Class
+#### Basic
+```typescript
+class Department {
+    name: string;
+
+    constructor(n: string) {
+        this.name = n
+    }
+
+    describe() {
+        console.log('Department:  ' + this.name);
+    }
+}
+
+// how to use class
+const finance = new Department('Finance');
+finance.describe();
+```
+- problem: sometimes `this` can be a bit tricky in javascript
+```typescript
+class Department {
+    name: string;
+
+    constructor(n: string) {
+        this.name = n
+    }
+
+    describe() {
+        console.log('Department:  ' + this.name);
+    }
+}
+
+const finance = new Department('Finance');
+finance.describe();
+
+const copyFinance = { describe: finance.describe } // `finance.describe` (without the parentheses) means that we pass object function to property `describe`
+copyFinance.describe(); // when executed it will show "Department: undefined", this because the `this` is not refering to the `finance` object but it refering to `copyFinance` object
+```
+- solution
+```typescript
+class Department {
+    name: string;
+
+    constructor(n: string) {
+        this.name = n
+    }
+
+    // we adding `this` as parameter, but we can still execute function `describe()` without any parameter, because `this` as parameter is special
+    // by adding `this: Department` we tell typescript that `this` should be refering to Department
+    describe(this: Department) {
+        console.log('Department:  ' + this.name);
+    }
+}
+
+const finance = new Department('Finance');
+finance.describe();
+
+const copyFinance = { name: 'Dummy', describe: finance.describe } // typescript will force us to add `name` property
+copyFinance.describe(); // when executed it will show "Department: Dummy"
+```
+#### Access Modifiers
+```typescript
+class Department {
+    // by default this property is `public`, we can also write it like `public name: string;`
+    name: string;
+    // property can only be access by it own class
+    private employee: string[] = [];
+
+    constructor(n: string) {
+        this.name = n
+    }
+
+    describe() {
+        console.log('Department:  ' + this.name);
+    }
+
+    addEmployee(employee: string) {
+        this.employee.push(employee);
+    }
+
+    printEmployeeInformation() {
+        console.log(this.employee.length);
+        console.log(this.employee);
+    }
+}
+
+const finance = new Department('Finance');
+finance.addEmployee('Hery');
+finance.addEmployee('Maria');
+finance.printEmployeeInformation();
+```
+#### Shorthand Initialization
+```typescript
+class Department {
+    // property can only be access by it own class
+    private employee: string[] = [];
+
+    // shorthand initialization
+    constructor(private id: string, public name: string) {
+        // no need to do `this.id = id; this.name = name;` since we use shorthand initialization
+    }
+
+    describe() {
+        console.log(`Department (${this.id}): ${this.name}`);
+    }
+
+    addEmployee(employee: string) {
+        this.employee.push(employee);
+    }
+
+    printEmployeeInformation() {
+        console.log(this.employee.length);
+        console.log(this.employee);
+    }
+}
+
+const finance = new Department('d1', 'Finance');
+finance.describe(); // when executed it will show "Department (d1): Finance"
+finance.addEmployee('Hery');
+finance.addEmployee('Maria');
+finance.printEmployeeInformation();
+```
+#### readonly Properties
+`readonly` property mean that this certain property can be only be initialized once.
+```typescript
+class Department {
+    private readonly id: string;
+    private name: string;
+    private employee: string[] = [];
+
+    constructor(id: string, name: string) {
+        this.id = id;
+        this.name = name;
+    }
+
+    describe() {
+        console.log(`Department (${this.id}): ${this.name}`);
+    }
+
+    addEmployee(employee: string) {
+        this.id = 'd2'; // typescript will throw error on this line because `id` have readonly property
+        this.employee.push(employee);
+    }
+
+    printEmployeeInformation() {
+        console.log(this.employee.length);
+        console.log(this.employee);
+    }
+}
+
+const finance = new Department('d1', 'Finance');
+finance.describe();
+```
+we also can use `readonly` property in shorthand initialization
+```typescript
+class Department {
+    private employee: string[] = [];
+
+    constructor(private readonly id: string, private name: string) {
+    }
+
+    describe() {
+        console.log(`Department (${this.id}): ${this.name}`);
+    }
+
+    addEmployee(employee: string) {
+        this.id = 'd2'; // typescript will throw error on this line because `id` have readonly property
+        this.employee.push(employee);
+    }
+
+    printEmployeeInformation() {
+        console.log(this.employee.length);
+        console.log(this.employee);
+    }
+}
+
+const finance = new Department('d1', 'Finance');
+finance.describe();
+```
+#### Inheritance
+- tips: use `super()` to call the constructor of the base class
+```typescript
+class Department {
+    constructor(private readonly id: string, private name: string) {
+    }
+
+    describe() {
+        console.log(`Department (${this.id}): ${this.name}`);
+    }
+}
+
+class FinanceDepartment extends Department {
+    constructor(private id: string, headDepartment: string) {
+        super('d1', 'Finance');
+    }
+
+    printHeadDepartment() {
+        console.log(`Head of ${this.name} department is ${this.headDepartment}`);
+    }
+}
+
+class HrDepartment extends Department {
+    constructor(private id: string, employee: string[]) {
+        super('d2', 'HR');
+    }
+
+    addEmployee(employee: string) {
+        this.employee.push(employee);
+    }
+
+    printHrStaff() {
+        console.log(this.employee);
+    }
+}
+
+const finance = new FinanceDepartment('d1', 'Hery');
+finance.describe(); // when executed it will show "Department (d1): Finance"
+finance.printHeadDepartment(); // when executed it will show "Head of Finance department is Hery"
+
+const hr = new HrDepartment('d2', 'Maria');
+hr.describe(); // when executed it will show "Department (d2): HR"
+hr.addEmployee('John');
+hr.addEmployee('Anna');
+hr.printHrStaff();
+```
+#### Overriding Properties & protected Modifier
+```typescript
+class Department {
+    // now `employee` is protected property, means it can be modified by the child class
+    constructor(private readonly id: string, private name: string, protected employee: string[]) {
+    }
+
+    describe() {
+        console.log(`Department (${this.id}): ${this.name}`);
+    }
+
+    addEmployee(employee: string) {
+        this.employee.push(employee);
+    }
+}
+
+class HrDepartment extends Department {
+    constructor(private id: string, employee: string[]) {
+        super('d2', 'HR');
+    }
+
+    // overriding the parent `addEmployee` function
+    addEmployee(employee: string) {
+        // skip push when `employee` value is "Hery"
+        if (employee === 'Hery') {
+            return;
+        }
+        this.employee.push(employee);
+    }
+
+    printHrStaff() {
+        console.log(this.employee);
+    }
+}
+
+const finance = new FinanceDepartment('d1', 'Hery');
+finance.describe(); // when executed it will show "Department (d1): Finance"
+finance.addEmployee('Hery');
+finance.addEmployee('Maria');
+finance.printEmployeeInformation(); // when executed it will show "['Hery', 'Maria']"
+
+const hr = new HrDepartment('d2', 'Maria');
+hr.describe(); // when executed it will show "Department (d2): HR"
+hr.addEmployee('Hery');
+hr.addEmployee('John');
+hr.addEmployee('Anna');
+finance.printEmployeeInformation(); // when executed it will show "['John', 'Anna']"
+```
+#### Getter & Setter
+```typescript
+class Employee {
+    private id: string;
+
+    constructor(firstName: string, lastName: string) {
+    }
+
+    get employeeFullName() {
+        return `${this.firstname} ${this.lastName}`;
+    }
+
+    set employeeID(id: string) {
+        this.id = id;
+    }
+
+    printEmployeeDetail() {
+        console.log(this);
+    }
+}
+
+const emp = new Employee('Hery', 'Sehastian');
+console.log(emp.employeeFullName); // when call `getter` property we don't need to add parentheses
+emp.printEmployeeDetail(); // will print "Employee: {id: undefined, firstName: 'Hery', lastName: 'Sehastian'}"
+emp.employeeID = 'E1'; // when assign value to `setter` property we just do like assign value to normal varible
+emp.printEmployeeDetail(); // will print "Employee: {id: 'E1', firstName: 'Hery', lastName: 'Sehastian'}"
+```
