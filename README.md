@@ -811,6 +811,16 @@ class Department {
     }
 }
 
+class FinanceDepartment extends Department {
+    constructor(private id: string, headDepartment: string) {
+        super('d1', 'Finance');
+    }
+
+    printHeadDepartment() {
+        console.log(`Head of ${this.name} department is ${this.headDepartment}`);
+    }
+}
+
 class HrDepartment extends Department {
     constructor(private id: string, employee: string[]) {
         super('d2', 'HR');
@@ -869,4 +879,85 @@ console.log(emp.employeeFullName); // when call `getter` property we don't need 
 emp.printEmployeeDetail(); // will print "Employee: {id: undefined, firstName: 'Hery', lastName: 'Sehastian'}"
 emp.employeeID = 'E1'; // when assign value to `setter` property we just do like assign value to normal varible
 emp.printEmployeeDetail(); // will print "Employee: {id: 'E1', firstName: 'Hery', lastName: 'Sehastian'}"
+```
+#### Static Methods & Properties
+```typescript
+class HelloWorld {
+    // static property
+    static greeting = 'hello';
+
+    // static method
+    static sayHi(firstName: string) {
+        return `${HelloWorld.greeting}, ${firstName}!`;
+    }
+}
+
+let firstName = 'Hery';
+console.log(HelloWorld.fullName(firstName));
+```
+#### Abtract Class
+```typescript
+abtract class Car {
+    abtract brand(): void;
+}
+
+class Honda extends Car {
+    constructor() {
+
+    }
+
+    brand() {
+        console.log('The car brand is Honda');
+    }
+}
+
+class Toyota extends Car {
+    constructor() {
+
+    }
+
+    brand() {
+        console.log('The car brand is Toyota');
+    }
+}
+
+const car1 = new Honda();
+car1.brand();
+
+const car2 = new Toyota();
+car2.brand();
+```
+#### Singletons & Private Constructor
+The singleton pattern is about ensuring that we only have exactly one intance of a certain class, this is where the private contractor is useful
+```typescript
+class Logger {
+    private static instance: Logger;
+    private text: string;
+
+    private constructor() {
+    }
+
+    writeLog(severity: string, message: string) {
+        this.text =+ `${this.severity} - ${this.message} \n`;
+    }
+
+    printLog() {
+        console.log(this.text);
+    }
+
+    static getInstance() {
+        if (this.instance) {
+            return this.instance
+        }
+        this.instance = new Logger();
+        return this.instance;
+    }
+}
+
+const log1 = Logger.getInstance();
+log1.writeLog('info', 'Hello World');
+log1.printLog(); // will show "info - Hello World";
+const log2 = Logger.getInstance();
+log2.printLog(); // will show "info - Hello World";
+// both log1 and log2 have same instance of Logger class
 ```
