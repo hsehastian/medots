@@ -961,3 +961,167 @@ const log2 = Logger.getInstance();
 log2.printLog(); // will show "info - Hello World";
 // both log1 and log2 have same instance of Logger class
 ```
+#### Interface in typescript
+```typescript
+interface Person {
+    name: string,
+    age: number,
+    greet(phrase: string): void;
+}
+
+// in typescript we can use interface for type checking
+// we do this to make sure the object that created have the same structure like the interface
+let user1: Person;
+
+user1 = {
+    name: 'Hery',
+    age: 37,
+    greet(phrase: string): {
+        console.log(`${phrase} ${this.name}`);
+    }
+}
+
+user1.greet('Hi there my name is');
+```
+Using interface with class
+```typescript
+interface Greetable {
+    name: string,
+    greet(phrase: string): void;
+}
+
+class Person implements Greetable {
+    name: string;
+    age = 30;
+
+    constructor(n: string) {
+        this.name = n;
+    }
+
+    greet(phrase: string) {
+        console.log(`${phrase} ${this.name}`);
+    }
+}
+
+const person = new Person('Hery');
+person.greet();
+```
+Readonly Interface Properties
+```typescript
+interface Greetable {
+    readonly name: string;
+    greet(phrase: string): void;
+}
+
+class Person implements Greetable {
+    name: string;
+    age = 30;
+
+    constructor(n: string) {
+        this.name = n;
+    }
+
+    greet(phrase: string) {
+        console.log(`${phrase} ${this.name}`);
+    }
+}
+
+const person = new Person('Hery');
+person.name = 'Maria'; // this will throw error due to readonly property
+person.greet();
+```
+Extending Interface: in typescript we can extends interface with one or multiple interfaces
+normally we can implement multiple interfaces in one class
+```typescript
+interface Named {
+    readonly name: string;
+}
+
+interface Greetable {
+    greet(phrase: string): void;
+}
+
+class Person implements Greetable, Named {
+    // code goes here
+}
+```
+in typescript we can extends interface
+```typescript
+interface Named {
+    readonly name: string;
+}
+// by extends Named, now every class that implement Greetable should have name property
+interface Greetable extends Named {
+    greet(phrase: string): void;
+}
+
+class Person implements Greetable {
+    // code goes here
+}
+```
+we can extends interface with multiple interface
+```typescript
+interface Named {
+    readonly name: string;
+}
+
+interface Greetable {
+    greet(phrase: string): void;
+}
+
+interface Intro extends Greetable, Named {
+    selfIntro(): void;
+}
+
+class Person implements Intro {
+    // code goes here
+}
+```
+Interface as Function Type: we can use interface as alternative to `type`
+example using `type`
+```typescript
+type AddFn = (a: number, b: number) => number;
+
+let add: AddFn;
+
+add = (n1: number, n2: number) => {
+    return n1+n2;
+}
+```
+example using interface
+```typescript
+interface AddFn {
+    (a: number, b: number): number;
+}
+
+let add: AddFn;
+
+add = (n1: number, n2: number) => {
+    return n1+n2;
+}
+```
+Optional Parameters & Properties: to make property optional (nullable) we just need put `?` after the property name e.g. `name?: string`
+```typescript
+interface Greetable {
+    name: string;
+    prettyName?: string
+    greet(phrase: string): void;
+}
+
+// we will not get error from typescript because `prettyName` is optional
+class Person implements Greetable {
+    name: string;
+    age = 30;
+
+    constructor(n: string) {
+        this.name = n;
+    }
+
+    greet(phrase: string) {
+        console.log(`${phrase} ${this.name}`);
+    }
+}
+
+const person = new Person('Hery');
+person.greet();
+```
