@@ -961,3 +961,25 @@ const log2 = Logger.getInstance();
 log2.printLog(); // will show "info - Hello World";
 // both log1 and log2 have same instance of Logger class
 ```
+#### Interface in typescript
+```typescript
+interface Person {
+    name: string,
+    age: number,
+    greet(phrase: string): void;
+}
+
+// in typescript we can use interface for type checking
+// we do this to make sure the object that created have the same structure like the interface
+let user1: Person;
+
+user1 = {
+    name: 'Hery',
+    age: 37,
+    greet(phrase: string): {
+        console.log(`${phrase} {this.name}`);
+    }
+}
+
+user1.greet('Hi there my name is');
+```
