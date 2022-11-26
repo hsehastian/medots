@@ -961,7 +961,7 @@ const log2 = Logger.getInstance();
 log2.printLog(); // will show "info - Hello World";
 // both log1 and log2 have same instance of Logger class
 ```
-#### Interface in typescript
+### Interface in typescript
 ```typescript
 interface Person {
     name: string,
@@ -1124,4 +1124,121 @@ class Person implements Greetable {
 
 const person = new Person('Hery');
 person.greet();
+```
+### Advanced Types
+#### Intersection Types
+example 1
+```typescript
+type Admin = {
+    name: string;
+    privileges: string[];
+}
+
+type Employee = {
+    name: string;
+    startDate: Date;
+}
+
+// this is called intersection type
+// we create new type by combining 2 existing types using & symbol
+type ElevatedEmployee = Admin & Employee;
+
+const e1: ElevatedEmployee = {
+    name: 'Hery',
+    privileges: ['create-post'],
+    startDate: new Date()
+};
+```
+example 2
+```typescript
+type Combinable = string | number;
+type Numeric = number | boolean;
+type Universal = Combinable & Numeric;
+```
+#### Type Guards
+Type Guards is not typescript feature it's a javascript feature that used to check type, property and class
+- checking variable type we can use `typeof`
+```typescript
+type Combinable = string | number;
+type Numeric = number | boolean;
+type Universal = Combinable & Numeric;
+
+function add(a: Combinable, b: Combinable) {
+    if (typeof a === 'string' || typeof b === 'string') {
+        return a.toString() + b.toString();
+    }
+    return a + b;
+}
+```
+- checking whether property or method in type or class we can use `in`
+```typescript
+type Admin = {
+    name: string;
+    privileges: string[];
+}
+
+type Employee = {
+    name: string;
+    startDate: Date;
+}
+
+type UnknownEmployee = Employee | Admin;
+
+function printEmployeeInformation(emp: UnknownEmployee) {
+    console.log('Name: ' + emp.name);
+    if ('privileges' in emp) {
+        console.log('Privileges: ' + emp.privileges);
+    }
+
+    if ('startDate' in emp) {
+        console.log('Start Date: ' + emp.startDate);
+    }
+}
+
+const e1: UnknownEmployee = {
+    name: 'Hery',
+    privileges: ['create-post'],
+    startDate: new Date()
+};
+
+printEmployeeInformation(e1);
+```
+- checking instance of class we can use `instanceof`
+```typescript
+class Car {
+    drive() {
+        console.log('Driving...');
+    }
+}
+
+class Truck {
+    drive() {
+        console.log('Driving...');
+    }
+
+    loadCargo(amount: number) {
+        console.log('Loading cargo...' + amount);
+    }
+}
+
+type Vehicle = Car | Truck;
+
+const v1 = new Car();
+const v2 = new Truck();
+
+function useVehicle(vehicle: Vehicle) {
+    vehicle.drive();
+
+    // we can use type guard `in` for this case but there is more elegant solution
+    // if ('loadCargo' in vehicle) {
+    //     vehicle.loadCargo(1000);
+    // }
+
+    if (vehicle instanceof Truck) {
+        vehicle.loadCargo(1000);
+    }
+}
+
+useVehicle(v1);
+useVehicle(v2);
 ```
