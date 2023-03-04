@@ -5,11 +5,19 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "lite-server"
+    "start": "lite-server",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "lint": "eslint . --ext .ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "lite-server": "^2.6.1"
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "lite-server": "^2.6.1",
+    "prettier": "^2.8.4"
   }
 }
