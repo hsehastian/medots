@@ -1426,3 +1426,29 @@ function moveAnimal(animal: Animal) {
 // during typing the type you will notice that Typescript aware about the type Bird and Horse
 moveAnimal({ type: 'bird', flyingSpeed: 10 });
 ```
+
+#### Type Casting
+
+Typescript support type casting there 2 ways for doing type casting in Typescript
+option 1:
+
+```typescript
+const userInputElement = <HTMLInputElement>document.getElementById('user-input')!;
+userInputElement.value = 'Hi There!';
+```
+
+option 2:
+
+```typescript
+const userInputElement = document.getElementById('user-input')! as HTMLInputElement;
+userInputElement.value = 'Hi There!';
+```
+
+another variation for option 2:
+
+```typescript
+const userInputElement = document.getElementById('user-input');
+if (userInputElement) {
+  (userInputElement as HTMLInputElement).value = 'Hi There!';
+}
+```
