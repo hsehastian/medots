@@ -1,4 +1,4 @@
-# List of notes and code base on what I learned from udemy "Understanding Typescript - 2022 Edition".
+# List of notes and code based on what I learned from udemy "Understanding Typescript - 2022 Edition"
 
 ## Why Typescript
 
@@ -8,18 +8,18 @@ JavaScript only gives errors during runtime when the code executes in a browser 
 
 ```typescript
 function add(num1, num2) {
-    return num1 + num2;
+  return num1 + num2;
 }
-console.log( add(5, 2.8) ); // result 7.8
+console.log(add(5, 2.8)); // result 7.8
 ```
 
 there is no issue with the above example, but what if there is a certain case we accidentally assign wrong value type. example:
 
 ```typescript
 function add(num1, num2) {
-    return num1 + num2;
+  return num1 + num2;
 }
-console.log( add('5', 2.8) ); // result 52.8
+console.log(add('5', 2.8)); // result 52.8
 ```
 
 this happens because we assign a string value to the function and since in the `add` function, we do `num1 + num2` JavaScript treated it as concatenation.
@@ -53,19 +53,19 @@ let num = 5;
 let name: 'Hery';
 
 // string using double quote
-let name: "Hery";
+let name: 'Hery';
 
-// string using template literal 
-let name = "Hery";
+// string using template literal
+let name = 'Hery';
 let hello = `hi ${name}!`;
 console.log(hello); //output: "hi Hery!"
 
 // can declare and assign value later
 let name: string;
-name = "Hery";
+name = 'Hery';
 
 // considered OK but is not necessary
-let name: string = "Hery";
+let name: string = 'Hery';
 ```
 
 - `boolean`: like in JavaScript, accept value `true` or `false`
@@ -90,25 +90,25 @@ let isValid = true;
  * because we don't define the object properties types
  */
 const person = {
-    name: "Hery",
-    age: 30
+  name: 'Hery',
+  age: 30
 };
 
 /* this is valid for typescipt but with this approach
  * the typescript cannot giving the object properties autocompletion
  */
 const person: object = {
-    name: "Hery",
-    age: 30
-}
+  name: 'Hery',
+  age: 30
+};
 
 // Good
 const person: {
-    name: string;
-    age: number;
+  name: string;
+  age: number;
 } = {
-    name: "Hery",
-    age: 30
+  name: 'Hery',
+  age: 30
 };
 console.log(person.name);
 // on IDE when we type person.(dot) the IDE will giving property suggestion
@@ -154,7 +154,7 @@ let hobbies = ['sport', 'gaming']; // will detected as array of string
 
 // example for print
 for (const hobby of hobbies) {
-    console.log(hobby);
+  console.log(hobby);
 }
 ```
 
@@ -164,16 +164,15 @@ for (const hobby of hobbies) {
 // here we define roles as tuple with length of 2 and only can receive
 // number type for 1st element and string type for 2nd element
 let roles: [number, string];
-roles = [2, 'author']
-
+roles = [2, 'author'];
 
 // WARNING
 // as we defined above the "roles" can only receive 2 element of data
 // but need to aware that if we use array "push" typescript cannot catch
 // this error
 let roles: [number, string];
-roles = [2, "author"];
-roles.push("admin"); // this consider as valid due to typescript limitation
+roles = [2, 'author'];
+roles.push('admin'); // this consider as valid due to typescript limitation
 ```
 
 - `enum` : when we need human readable label we can use this type, usually we will declare `const` to hold the number / string that we used as label but we can eliminate it using enum
@@ -181,47 +180,58 @@ roles.push("admin"); // this consider as valid due to typescript limitation
 ```typescript
 // here we define Role as type enum
 // below enum means ADMIN receive number 0, AUTHOR receive number 1
-enum Role {ADMIN, AUTHOR};
+enum Role {
+  ADMIN,
+  AUTHOR
+}
 
 console.log(Role.ADMIN); // result: 0
 console.log(Role.AUTHOR); // result: 1
 
 // we also can define specific number to the enum element
-enum Status {DELETED = -1, ACTIVE = 1, DRAFT = 2}
+enum Status {
+  DELETED = -1,
+  ACTIVE = 1,
+  DRAFT = 2
+}
 
 console.log(Status.DELETED); // result: -1
 
 // this also valid enum
-enum Action {POST = 1, GET = 'get', PUT = 2}
+enum Action {
+  POST = 1,
+  GET = 'get',
+  PUT = 2
+}
 ```
 
 - `any` : basically will except any type, better avoid this type because this againts the purpose of us using the typescript
 
 ```typescript
 let a: any;
-a = "here"; // valid
+a = 'here'; // valid
 a = 1; // also valid
 
 let b: any[];
 b = 1; // invalid because we only receive array of any
-b = [1, "lorem"]; // valid
+b = [1, 'lorem']; // valid
 ```
 
 - Union Type: when we need a function, const or variable to except multiple type we can use union type using `|` (pipe) for declare the variable can except 2 or more types
 
 ```typescript
 function combine(input1: number | string, input2: number | string) {
-    let result;
-    if (typeof input1 === 'number' && typeof input2 === 'number') {
-        result = input1 + input2;
-    }else {
-        result = input1.toString() + input2.toString();
-    }
+  let result;
+  if (typeof input1 === 'number' && typeof input2 === 'number') {
+    result = input1 + input2;
+  } else {
+    result = input1.toString() + input2.toString();
+  }
 
-    return result;
+  return result;
 }
 
-let combineAges = combine(10,20);
+let combineAges = combine(10, 20);
 console.log(combineAges); //output: 30
 
 let combineName = combine('Hery', 'Sehastian');
@@ -231,19 +241,26 @@ console.log(combineName); //output: Hery Sehastian
 - Literal type is a type that we not just define the variable type but specifically define the expected value
 
 ```typescript
-function combine(input1: number | string, input2: number | string, resultConversion: 'as-number' | 'as-text') {
-    let result;
-    if (typeof input1 === 'number' && typeof input2 === 'number' || resultConversion === 'as-number') {
-        // + sign in the front of input1 and input2 force conversion, its equal to parseFloat(input1) + parseFloat(input2)
-        result = +input1 + +input2;
-    }else {
-        result = input1.toString() + input2.toString();
-    }
+function combine(
+  input1: number | string,
+  input2: number | string,
+  resultConversion: 'as-number' | 'as-text'
+) {
+  let result;
+  if (
+    (typeof input1 === 'number' && typeof input2 === 'number') ||
+    resultConversion === 'as-number'
+  ) {
+    // + sign in the front of input1 and input2 force conversion, its equal to parseFloat(input1) + parseFloat(input2)
+    result = +input1 + +input2;
+  } else {
+    result = input1.toString() + input2.toString();
+  }
 
-    return result;
+  return result;
 }
 
-let combineAges = combine(10,20, 'as-number');
+let combineAges = combine(10, 20, 'as-number');
 console.log(combineAges); //output: 30
 
 let combineName = combine('Hery', 'Sehastian', 'as-text');
@@ -263,19 +280,26 @@ type Combinable = number | string;
 type ConversionDescriptor = 'as-number' | 'as-text';
 
 // then we can use the alias in the function
-function combine(input1: Combinable, input2: Combinable, resultConversion: ConversionDescriptor) {
-    let result;
-    if (typeof input1 === 'number' && typeof input2 === 'number' || resultConversion === 'as-number') {
-        // + sign in the front of input1 and input2 force conversion, its equal to parseFloat(input1) + parseFloat(input2)
-        result = +input1 + +input2;
-    }else {
-        result = input1.toString() + input2.toString();
-    }
+function combine(
+  input1: Combinable,
+  input2: Combinable,
+  resultConversion: ConversionDescriptor
+) {
+  let result;
+  if (
+    (typeof input1 === 'number' && typeof input2 === 'number') ||
+    resultConversion === 'as-number'
+  ) {
+    // + sign in the front of input1 and input2 force conversion, its equal to parseFloat(input1) + parseFloat(input2)
+    result = +input1 + +input2;
+  } else {
+    result = input1.toString() + input2.toString();
+  }
 
-    return result;
+  return result;
 }
 
-let combineAges = combine(10,20, 'as-number');
+let combineAges = combine(10, 20, 'as-number');
 console.log(combineAges); //output: 30
 
 let combineName = combine('Hery', 'Sehastian', 'as-text');
@@ -287,25 +311,24 @@ Another use case example for Type Alias
 ```typescript
 // this is how we usually define object type, it considered OK but it's hard to read
 const person: {
-    name: string;
-    age: number;
+  name: string;
+  age: number;
 } = {
-    name: "Hery",
-    age: 30
+  name: 'Hery',
+  age: 30
 };
 console.log(person.name);
 
 // using type alias, we can make it more readable
 type Person = {
-    name: string;
-    age: number
-}
+  name: string;
+  age: number;
+};
 
 const person: Person = {
-    name: "Hery",
-    age: 30
-}
-
+  name: 'Hery',
+  age: 30
+};
 ```
 
 - Return Type & void: define a functon with the expected return type
@@ -313,17 +336,17 @@ const person: Person = {
 ```typescript
 // this is OK
 function add(num1: number, num2: number) {
-    return num1 + num2;
+  return num1 + num2;
 }
 
 // but if we want to specifically define the return type, typescript also support it
 function add(num1: number, num2: number): number {
-    return num1 + num2;
+  return num1 + num2;
 }
 
 // typescript also support return type "void"
 function printResult(result): void {
-    console.log(`Result: ${result}`);
+  console.log(`Result: ${result}`);
 }
 
 printResult(add(10, 30));
@@ -333,7 +356,7 @@ printResult(add(10, 30));
 
 ```typescript
 function add(num1: number, num2: number): number {
-    return num1 + num2;
+  return num1 + num2;
 }
 
 // let say we want to assign "add" function to variable
@@ -347,7 +370,7 @@ Using same example if we assign `combineFunction` with `number`
 
 ```typescript
 function add(num1: number, num2: number): number {
-    return num1 + num2;
+  return num1 + num2;
 }
 
 let combineFunction;
@@ -363,7 +386,7 @@ To avoid above issue we can set type `Function` to `combineFunction`
 
 ```typescript
 function add(num1: number, num2: number): number {
-    return num1 + num2;
+  return num1 + num2;
 }
 
 // set type Function
@@ -378,11 +401,11 @@ Using type `Function` will solve our problem to prevent `combineFunction` to be 
 
 ```typescript
 function add(num1: number, num2: number): number {
-    return num1 + num2;
+  return num1 + num2;
 }
 
 function printResult(result): void {
-    console.log(`Result: ${result}`);
+  console.log(`Result: ${result}`);
 }
 
 let combineFunction: Function;
@@ -398,11 +421,11 @@ To solve above issue we need to specifically tell typescript that `combineFuncti
 
 ```typescript
 function add(num1: number, num2: number): number {
-    return num1 + num2;
+  return num1 + num2;
 }
 
 function printResult(result): void {
-    console.log(`Result: ${result}`);
+  console.log(`Result: ${result}`);
 }
 
 // we don't need to use num1 and num2 as parameter, it can be any variable name as long as the expected type is same
@@ -416,9 +439,13 @@ console.log(combineFunction(10, 30));
 - Function Type & Callbacks
 
 ```typescript
-function addAndHandle(num1: number, num2: number, cb: (result: number) => void) {
-    const result = num1 + num2;
-    cb(result);
+function addAndHandle(
+  num1: number,
+  num2: number,
+  cb: (result: number) => void
+) {
+  const result = num1 + num2;
+  cb(result);
 }
 
 // Notes: if we trying to passing more then 1 parameter to function IDE will giving us an error
@@ -427,19 +454,19 @@ function addAndHandle(num1: number, num2: number, cb: (result: number) => void) 
 // the IDE will not giving any error message this because the return value will be ignored by typescript
 // this happen because we already define the callback return `void`
 addAndHandle(10, 20, (result) => {
-    console.log(result);
+  console.log(result);
 });
 ```
 
 - `unknown`: It's almost same like type `any` but it require type checking before we can assign it to variable. If possible we need to avoid using `uknown` type. Most of the time we many be just need to use Union Type, but for rare case when we really cannot predict the value we can use `unknown` type
-Using type `any`
+  Using type `any`
 
 ```typescript
 let userInput: any;
 let userName: string;
 
 userInput = 5;
-userInput = "Hery";
+userInput = 'Hery';
 userName = userInput; // here we will not get any error because IDE will ignore type checking for `any` type
 ```
 
@@ -450,7 +477,7 @@ let userInput: unknown;
 let userName: string;
 
 userInput = 5;
-userInput = "Hery";
+userInput = 'Hery';
 userName = userInput; // here we will get error
 ```
 
@@ -461,22 +488,22 @@ let userInput: unknown;
 let userName: string;
 
 userInput = 5;
-userInput = "Hery";
+userInput = 'Hery';
 
 if (typeof userInput === 'string') {
-    userName = userInput; // here dont get error anymore
+  userName = userInput; // here dont get error anymore
 }
 ```
 
 - `never`: Is a type that usually used as function return type, it's almost same like `void` but without return `undefined` value and it cancel the script execution
-using `void`
+  using `void`
 
 ```typescript
 function generateError(message: string, code: number): void {
-    throw {message: message, errorCode: code};
+  throw { message: message, errorCode: code };
 }
 
-const result = generateError("An error occurred!", 500);
+const result = generateError('An error occurred!', 500);
 console.log(result); // the console log still executed and will return "undefined" value
 ```
 
@@ -484,10 +511,10 @@ using `never`
 
 ```typescript
 function generateError(message: string, code: number): never {
-    throw {message: message, errorCode: code};
+  throw { message: message, errorCode: code };
 }
 
-const result = generateError("An error occurred!", 500);
+const result = generateError('An error occurred!', 500);
 console.log(result); // the console.log is never been executed
 ```
 
@@ -497,31 +524,31 @@ Here useful link from official typescript website: <https://www.typescriptlang.o
 
 1. To avoid keep execute `tsc app.ts` to compile the typescript whenever there is new changes, we use "watch mode" by adding `--watch` or `-w` at the end of command e.g. `tsc app.ts -w`
 2. To compile more than 1 files, we need to tell typescript that this folder is typescript project so we should run `tsc --init` (only once), then execute `tsc -w`
-Links :
-<https://www.typescriptlang.org/docs/handbook/tsconfig-json.html>
-<https://www.typescriptlang.org/docs/handbook/compiler-options.html>
-<https://code.visualstudio.com/docs/typescript/typescript-debugging>
+   Links :
+   <https://www.typescriptlang.org/docs/handbook/tsconfig-json.html>
+   <https://www.typescriptlang.org/docs/handbook/compiler-options.html>
+   <https://code.visualstudio.com/docs/typescript/typescript-debugging>
 
 ## Modern Javascript
 
 - Arrow function
 
 ```typescript
-const add = function(a: number, b: number) {
-    return a+b;
-}
+const add = function (a: number, b: number) {
+  return a + b;
+};
 
 // is equal to
 const add = (a: number, b: number) => {
-    return a+b;
-}
+  return a + b;
+};
 
 // shorter syntax
 const add = (a: number, b: number) => a + b;
 ```
 
 - Spread Operator: to use this operator it start with `...` before the object
-use case for Array
+  use case for Array
 
 ```typescript
 const hobbies = ['Sports', 'Cooking'];
@@ -541,30 +568,30 @@ use case for Object
 
 ```typescript
 const person = {
-    name: "Hery",
-    age: 30
+  name: 'Hery',
+  age: 30
 };
 
 // we can use spread operator if we want to copy person object
-const copiedPerson = { ...person }
+const copiedPerson = { ...person };
 ```
 
 - Rest Parameters: almost same like spread operator but this used in function
 
 ```typescript
 const add = (...numbers: number[]) => {
-    return numbers.reduce((a, b) => {
-        return a + b;
-    }, 0);
+  return numbers.reduce((a, b) => {
+    return a + b;
+  }, 0);
 };
 
 // now the `add` function can accept many number parameter
-const addNumbers = add(5, 10, 2, 3.5)
+const addNumbers = add(5, 10, 2, 3.5);
 console.log(addNumbers);
 ```
 
 - Array & Object Destructuring
-use case for Array
+  use case for Array
 
 ```typescript
 const hobbies = ['Sports', 'Cooking'];
@@ -590,17 +617,17 @@ use case for Object
 
 ```typescript
 const person = {
-    firstName: "Hery",
-    age: 30
+  firstName: 'Hery',
+  age: 30
 };
 
 // normally we will do this
 const firstName = person.firstName;
-const age = person.age
+const age = person.age;
 
 // using Object Destructuring, please note that the variable name must be same with the object property name
 // for this case variable firstName must be same with property firstName in person object
-const { firstName, age } = person
+const { firstName, age } = person;
 console.log(firstName); // output: "Hery"
 console.log(age); // output: 30
 ```
@@ -616,15 +643,15 @@ Links:
 
 ```typescript
 class Department {
-    name: string;
+  name: string;
 
-    constructor(n: string) {
-        this.name = n
-    }
+  constructor(n: string) {
+    this.name = n;
+  }
 
-    describe() {
-        console.log('Department:  ' + this.name);
-    }
+  describe() {
+    console.log('Department:  ' + this.name);
+  }
 }
 
 // how to use class
@@ -636,21 +663,21 @@ finance.describe();
 
 ```typescript
 class Department {
-    name: string;
+  name: string;
 
-    constructor(n: string) {
-        this.name = n
-    }
+  constructor(n: string) {
+    this.name = n;
+  }
 
-    describe() {
-        console.log('Department:  ' + this.name);
-    }
+  describe() {
+    console.log('Department:  ' + this.name);
+  }
 }
 
 const finance = new Department('Finance');
 finance.describe();
 
-const copyFinance = { describe: finance.describe } // `finance.describe` (without the parentheses) means that we pass object function to property `describe`
+const copyFinance = { describe: finance.describe }; // `finance.describe` (without the parentheses) means that we pass object function to property `describe`
 copyFinance.describe(); // when executed it will show "Department: undefined", this because the `this` is not refering to the `finance` object but it refering to `copyFinance` object
 ```
 
@@ -658,23 +685,23 @@ copyFinance.describe(); // when executed it will show "Department: undefined", t
 
 ```typescript
 class Department {
-    name: string;
+  name: string;
 
-    constructor(n: string) {
-        this.name = n
-    }
+  constructor(n: string) {
+    this.name = n;
+  }
 
-    // we adding `this` as parameter, but we can still execute function `describe()` without any parameter, because `this` as parameter is special
-    // by adding `this: Department` we tell typescript that `this` should be refering to Department
-    describe(this: Department) {
-        console.log('Department:  ' + this.name);
-    }
+  // we adding `this` as parameter, but we can still execute function `describe()` without any parameter, because `this` as parameter is special
+  // by adding `this: Department` we tell typescript that `this` should be refering to Department
+  describe(this: Department) {
+    console.log('Department:  ' + this.name);
+  }
 }
 
 const finance = new Department('Finance');
 finance.describe();
 
-const copyFinance = { name: 'Dummy', describe: finance.describe } // typescript will force us to add `name` property
+const copyFinance = { name: 'Dummy', describe: finance.describe }; // typescript will force us to add `name` property
 copyFinance.describe(); // when executed it will show "Department: Dummy"
 ```
 
@@ -682,27 +709,27 @@ copyFinance.describe(); // when executed it will show "Department: Dummy"
 
 ```typescript
 class Department {
-    // by default this property is `public`, we can also write it like `public name: string;`
-    name: string;
-    // property can only be access by it own class
-    private employee: string[] = [];
+  // by default this property is `public`, we can also write it like `public name: string;`
+  name: string;
+  // property can only be access by it own class
+  private employee: string[] = [];
 
-    constructor(n: string) {
-        this.name = n
-    }
+  constructor(n: string) {
+    this.name = n;
+  }
 
-    describe() {
-        console.log('Department:  ' + this.name);
-    }
+  describe() {
+    console.log('Department:  ' + this.name);
+  }
 
-    addEmployee(employee: string) {
-        this.employee.push(employee);
-    }
+  addEmployee(employee: string) {
+    this.employee.push(employee);
+  }
 
-    printEmployeeInformation() {
-        console.log(this.employee.length);
-        console.log(this.employee);
-    }
+  printEmployeeInformation() {
+    console.log(this.employee.length);
+    console.log(this.employee);
+  }
 }
 
 const finance = new Department('Finance');
@@ -715,26 +742,26 @@ finance.printEmployeeInformation();
 
 ```typescript
 class Department {
-    // property can only be access by it own class
-    private employee: string[] = [];
+  // property can only be access by it own class
+  private employee: string[] = [];
 
-    // shorthand initialization
-    constructor(private id: string, public name: string) {
-        // no need to do `this.id = id; this.name = name;` since we use shorthand initialization
-    }
+  // shorthand initialization
+  constructor(private id: string, public name: string) {
+    // no need to do `this.id = id; this.name = name;` since we use shorthand initialization
+  }
 
-    describe() {
-        console.log(`Department (${this.id}): ${this.name}`);
-    }
+  describe() {
+    console.log(`Department (${this.id}): ${this.name}`);
+  }
 
-    addEmployee(employee: string) {
-        this.employee.push(employee);
-    }
+  addEmployee(employee: string) {
+    this.employee.push(employee);
+  }
 
-    printEmployeeInformation() {
-        console.log(this.employee.length);
-        console.log(this.employee);
-    }
+  printEmployeeInformation() {
+    console.log(this.employee.length);
+    console.log(this.employee);
+  }
 }
 
 const finance = new Department('d1', 'Finance');
@@ -750,28 +777,28 @@ finance.printEmployeeInformation();
 
 ```typescript
 class Department {
-    private readonly id: string;
-    private name: string;
-    private employee: string[] = [];
+  private readonly id: string;
+  private name: string;
+  private employee: string[] = [];
 
-    constructor(id: string, name: string) {
-        this.id = id;
-        this.name = name;
-    }
+  constructor(id: string, name: string) {
+    this.id = id;
+    this.name = name;
+  }
 
-    describe() {
-        console.log(`Department (${this.id}): ${this.name}`);
-    }
+  describe() {
+    console.log(`Department (${this.id}): ${this.name}`);
+  }
 
-    addEmployee(employee: string) {
-        this.id = 'd2'; // typescript will throw error on this line because `id` have readonly property
-        this.employee.push(employee);
-    }
+  addEmployee(employee: string) {
+    this.id = 'd2'; // typescript will throw error on this line because `id` have readonly property
+    this.employee.push(employee);
+  }
 
-    printEmployeeInformation() {
-        console.log(this.employee.length);
-        console.log(this.employee);
-    }
+  printEmployeeInformation() {
+    console.log(this.employee.length);
+    console.log(this.employee);
+  }
 }
 
 const finance = new Department('d1', 'Finance');
@@ -782,24 +809,23 @@ we also can use `readonly` property in shorthand initialization
 
 ```typescript
 class Department {
-    private employee: string[] = [];
+  private employee: string[] = [];
 
-    constructor(private readonly id: string, private name: string) {
-    }
+  constructor(private readonly id: string, private name: string) {}
 
-    describe() {
-        console.log(`Department (${this.id}): ${this.name}`);
-    }
+  describe() {
+    console.log(`Department (${this.id}): ${this.name}`);
+  }
 
-    addEmployee(employee: string) {
-        this.id = 'd2'; // typescript will throw error on this line because `id` have readonly property
-        this.employee.push(employee);
-    }
+  addEmployee(employee: string) {
+    this.id = 'd2'; // typescript will throw error on this line because `id` have readonly property
+    this.employee.push(employee);
+  }
 
-    printEmployeeInformation() {
-        console.log(this.employee.length);
-        console.log(this.employee);
-    }
+  printEmployeeInformation() {
+    console.log(this.employee.length);
+    console.log(this.employee);
+  }
 }
 
 const finance = new Department('d1', 'Finance');
@@ -812,36 +838,35 @@ finance.describe();
 
 ```typescript
 class Department {
-    constructor(private readonly id: string, private name: string) {
-    }
+  constructor(private readonly id: string, private name: string) {}
 
-    describe() {
-        console.log(`Department (${this.id}): ${this.name}`);
-    }
+  describe() {
+    console.log(`Department (${this.id}): ${this.name}`);
+  }
 }
 
 class FinanceDepartment extends Department {
-    constructor(private id: string, headDepartment: string) {
-        super('d1', 'Finance');
-    }
+  constructor(private id: string, headDepartment: string) {
+    super('d1', 'Finance');
+  }
 
-    printHeadDepartment() {
-        console.log(`Head of ${this.name} department is ${this.headDepartment}`);
-    }
+  printHeadDepartment() {
+    console.log(`Head of ${this.name} department is ${this.headDepartment}`);
+  }
 }
 
 class HrDepartment extends Department {
-    constructor(private id: string, employee: string[]) {
-        super('d2', 'HR');
-    }
+  constructor(private id: string, employee: string[]) {
+    super('d2', 'HR');
+  }
 
-    addEmployee(employee: string) {
-        this.employee.push(employee);
-    }
+  addEmployee(employee: string) {
+    this.employee.push(employee);
+  }
 
-    printHrStaff() {
-        console.log(this.employee);
-    }
+  printHrStaff() {
+    console.log(this.employee);
+  }
 }
 
 const finance = new FinanceDepartment('d1', 'Hery');
@@ -859,46 +884,49 @@ hr.printHrStaff();
 
 ```typescript
 class Department {
-    // now `employee` is protected property, means it can be modified by the child class
-    constructor(private readonly id: string, private name: string, protected employee: string[]) {
-    }
+  // now `employee` is protected property, means it can be modified by the child class
+  constructor(
+    private readonly id: string,
+    private name: string,
+    protected employee: string[]
+  ) {}
 
-    describe() {
-        console.log(`Department (${this.id}): ${this.name}`);
-    }
+  describe() {
+    console.log(`Department (${this.id}): ${this.name}`);
+  }
 
-    addEmployee(employee: string) {
-        this.employee.push(employee);
-    }
+  addEmployee(employee: string) {
+    this.employee.push(employee);
+  }
 }
 
 class FinanceDepartment extends Department {
-    constructor(private id: string, headDepartment: string) {
-        super('d1', 'Finance');
-    }
+  constructor(private id: string, headDepartment: string) {
+    super('d1', 'Finance');
+  }
 
-    printHeadDepartment() {
-        console.log(`Head of ${this.name} department is ${this.headDepartment}`);
-    }
+  printHeadDepartment() {
+    console.log(`Head of ${this.name} department is ${this.headDepartment}`);
+  }
 }
 
 class HrDepartment extends Department {
-    constructor(private id: string, employee: string[]) {
-        super('d2', 'HR');
-    }
+  constructor(private id: string, employee: string[]) {
+    super('d2', 'HR');
+  }
 
-    // overriding the parent `addEmployee` function
-    addEmployee(employee: string) {
-        // skip push when `employee` value is "Hery"
-        if (employee === 'Hery') {
-            return;
-        }
-        this.employee.push(employee);
+  // overriding the parent `addEmployee` function
+  addEmployee(employee: string) {
+    // skip push when `employee` value is "Hery"
+    if (employee === 'Hery') {
+      return;
     }
+    this.employee.push(employee);
+  }
 
-    printHrStaff() {
-        console.log(this.employee);
-    }
+  printHrStaff() {
+    console.log(this.employee);
+  }
 }
 
 const finance = new FinanceDepartment('d1', 'Hery');
@@ -919,22 +947,21 @@ finance.printEmployeeInformation(); // when executed it will show "['John', 'Ann
 
 ```typescript
 class Employee {
-    private id: string;
+  private id: string;
 
-    constructor(firstName: string, lastName: string) {
-    }
+  constructor(firstName: string, lastName: string) {}
 
-    get employeeFullName() {
-        return `${this.firstname} ${this.lastName}`;
-    }
+  get employeeFullName() {
+    return `${this.firstname} ${this.lastName}`;
+  }
 
-    set employeeID(id: string) {
-        this.id = id;
-    }
+  set employeeID(id: string) {
+    this.id = id;
+  }
 
-    printEmployeeDetail() {
-        console.log(this);
-    }
+  printEmployeeDetail() {
+    console.log(this);
+  }
 }
 
 const emp = new Employee('Hery', 'Sehastian');
@@ -948,13 +975,13 @@ emp.printEmployeeDetail(); // will print "Employee: {id: 'E1', firstName: 'Hery'
 
 ```typescript
 class HelloWorld {
-    // static property
-    static greeting = 'hello';
+  // static property
+  static greeting = 'hello';
 
-    // static method
-    static sayHi(firstName: string) {
-        return `${HelloWorld.greeting}, ${firstName}!`;
-    }
+  // static method
+  static sayHi(firstName: string) {
+    return `${HelloWorld.greeting}, ${firstName}!`;
+  }
 }
 
 let firstName = 'Hery';
@@ -1001,27 +1028,26 @@ The singleton pattern is about ensuring that we only have exactly one intance of
 
 ```typescript
 class Logger {
-    private static instance: Logger;
-    private text: string;
+  private static instance: Logger;
+  private text: string;
 
-    private constructor() {
-    }
+  private constructor() {}
 
-    writeLog(severity: string, message: string) {
-        this.text =+ `${this.severity} - ${this.message} \n`;
-    }
+  writeLog(severity: string, message: string) {
+    this.text = +`${this.severity} - ${this.message} \n`;
+  }
 
-    printLog() {
-        console.log(this.text);
-    }
+  printLog() {
+    console.log(this.text);
+  }
 
-    static getInstance() {
-        if (this.instance) {
-            return this.instance
-        }
-        this.instance = new Logger();
-        return this.instance;
+  static getInstance() {
+    if (this.instance) {
+      return this.instance;
     }
+    this.instance = new Logger();
+    return this.instance;
+  }
 }
 
 const log1 = Logger.getInstance();
@@ -1060,21 +1086,21 @@ Using interface with class
 
 ```typescript
 interface Greetable {
-    name: string,
-    greet(phrase: string): void;
+  name: string;
+  greet(phrase: string): void;
 }
 
 class Person implements Greetable {
-    name: string;
-    age = 30;
+  name: string;
+  age = 30;
 
-    constructor(n: string) {
-        this.name = n;
-    }
+  constructor(n: string) {
+    this.name = n;
+  }
 
-    greet(phrase: string) {
-        console.log(`${phrase} ${this.name}`);
-    }
+  greet(phrase: string) {
+    console.log(`${phrase} ${this.name}`);
+  }
 }
 
 const person = new Person('Hery');
@@ -1085,21 +1111,21 @@ Readonly Interface Properties
 
 ```typescript
 interface Greetable {
-    readonly name: string;
-    greet(phrase: string): void;
+  readonly name: string;
+  greet(phrase: string): void;
 }
 
 class Person implements Greetable {
-    name: string;
-    age = 30;
+  name: string;
+  age = 30;
 
-    constructor(n: string) {
-        this.name = n;
-    }
+  constructor(n: string) {
+    this.name = n;
+  }
 
-    greet(phrase: string) {
-        console.log(`${phrase} ${this.name}`);
-    }
+  greet(phrase: string) {
+    console.log(`${phrase} ${this.name}`);
+  }
 }
 
 const person = new Person('Hery');
@@ -1112,15 +1138,15 @@ normally we can implement multiple interfaces in one class
 
 ```typescript
 interface Named {
-    readonly name: string;
+  readonly name: string;
 }
 
 interface Greetable {
-    greet(phrase: string): void;
+  greet(phrase: string): void;
 }
 
 class Person implements Greetable, Named {
-    // code goes here
+  // code goes here
 }
 ```
 
@@ -1128,15 +1154,15 @@ in typescript we can extends interface
 
 ```typescript
 interface Named {
-    readonly name: string;
+  readonly name: string;
 }
 // by extends Named, now every class that implement Greetable should have name property
 interface Greetable extends Named {
-    greet(phrase: string): void;
+  greet(phrase: string): void;
 }
 
 class Person implements Greetable {
-    // code goes here
+  // code goes here
 }
 ```
 
@@ -1144,19 +1170,19 @@ we can extends interface with multiple interface
 
 ```typescript
 interface Named {
-    readonly name: string;
+  readonly name: string;
 }
 
 interface Greetable {
-    greet(phrase: string): void;
+  greet(phrase: string): void;
 }
 
 interface Intro extends Greetable, Named {
-    selfIntro(): void;
+  selfIntro(): void;
 }
 
 class Person implements Intro {
-    // code goes here
+  // code goes here
 }
 ```
 
@@ -1169,45 +1195,45 @@ type AddFn = (a: number, b: number) => number;
 let add: AddFn;
 
 add = (n1: number, n2: number) => {
-    return n1+n2;
-}
+  return n1 + n2;
+};
 ```
 
 example using interface
 
 ```typescript
 interface AddFn {
-    (a: number, b: number): number;
+  (a: number, b: number): number;
 }
 
 let add: AddFn;
 
 add = (n1: number, n2: number) => {
-    return n1+n2;
-}
+  return n1 + n2;
+};
 ```
 
 Optional Parameters & Properties: to make property optional (nullable) we just need put `?` after the property name e.g. `name?: string`
 
 ```typescript
 interface Greetable {
-    name: string;
-    prettyName?: string
-    greet(phrase: string): void;
+  name: string;
+  prettyName?: string;
+  greet(phrase: string): void;
 }
 
 // we will not get error from typescript because `prettyName` is optional
 class Person implements Greetable {
-    name: string;
-    age = 30;
+  name: string;
+  age = 30;
 
-    constructor(n: string) {
-        this.name = n;
-    }
+  constructor(n: string) {
+    this.name = n;
+  }
 
-    greet(phrase: string) {
-        console.log(`${phrase} ${this.name}`);
-    }
+  greet(phrase: string) {
+    console.log(`${phrase} ${this.name}`);
+  }
 }
 
 const person = new Person('Hery');
@@ -1222,23 +1248,23 @@ example 1
 
 ```typescript
 type Admin = {
-    name: string;
-    privileges: string[];
-}
+  name: string;
+  privileges: string[];
+};
 
 type Employee = {
-    name: string;
-    startDate: Date;
-}
+  name: string;
+  startDate: Date;
+};
 
 // this is called intersection type
 // we create new type by combining 2 existing types using & symbol
 type ElevatedEmployee = Admin & Employee;
 
 const e1: ElevatedEmployee = {
-    name: 'Hery',
-    privileges: ['create-post'],
-    startDate: new Date()
+  name: 'Hery',
+  privileges: ['create-post'],
+  startDate: new Date()
 };
 ```
 
@@ -1262,10 +1288,10 @@ type Numeric = number | boolean;
 type Universal = Combinable & Numeric;
 
 function add(a: Combinable, b: Combinable) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        return a.toString() + b.toString();
-    }
-    return a + b;
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  }
+  return a + b;
 }
 ```
 
@@ -1273,32 +1299,32 @@ function add(a: Combinable, b: Combinable) {
 
 ```typescript
 type Admin = {
-    name: string;
-    privileges: string[];
-}
+  name: string;
+  privileges: string[];
+};
 
 type Employee = {
-    name: string;
-    startDate: Date;
-}
+  name: string;
+  startDate: Date;
+};
 
 type UnknownEmployee = Employee | Admin;
 
 function printEmployeeInformation(emp: UnknownEmployee) {
-    console.log('Name: ' + emp.name);
-    if ('privileges' in emp) {
-        console.log('Privileges: ' + emp.privileges);
-    }
+  console.log('Name: ' + emp.name);
+  if ('privileges' in emp) {
+    console.log('Privileges: ' + emp.privileges);
+  }
 
-    if ('startDate' in emp) {
-        console.log('Start Date: ' + emp.startDate);
-    }
+  if ('startDate' in emp) {
+    console.log('Start Date: ' + emp.startDate);
+  }
 }
 
 const e1: UnknownEmployee = {
-    name: 'Hery',
-    privileges: ['create-post'],
-    startDate: new Date()
+  name: 'Hery',
+  privileges: ['create-post'],
+  startDate: new Date()
 };
 
 printEmployeeInformation(e1);
@@ -1308,19 +1334,19 @@ printEmployeeInformation(e1);
 
 ```typescript
 class Car {
-    drive() {
-        console.log('Driving...');
-    }
+  drive() {
+    console.log('Driving...');
+  }
 }
 
 class Truck {
-    drive() {
-        console.log('Driving...');
-    }
+  drive() {
+    console.log('Driving...');
+  }
 
-    loadCargo(amount: number) {
-        console.log('Loading cargo...' + amount);
-    }
+  loadCargo(amount: number) {
+    console.log('Loading cargo...' + amount);
+  }
 }
 
 type Vehicle = Car | Truck;
@@ -1329,18 +1355,74 @@ const v1 = new Car();
 const v2 = new Truck();
 
 function useVehicle(vehicle: Vehicle) {
-    vehicle.drive();
+  vehicle.drive();
 
-    // we can use type guard `in` for this case but there is more elegant solution
-    // if ('loadCargo' in vehicle) {
-    //     vehicle.loadCargo(1000);
-    // }
+  // we can use type guard `in` for this case but there is more elegant solution
+  // if ('loadCargo' in vehicle) {
+  //     vehicle.loadCargo(1000);
+  // }
 
-    if (vehicle instanceof Truck) {
-        vehicle.loadCargo(1000);
-    }
+  if (vehicle instanceof Truck) {
+    vehicle.loadCargo(1000);
+  }
 }
 
 useVehicle(v1);
 useVehicle(v2);
+```
+
+#### Discriminated Unions
+
+one of the type guard technique that use a single field which uses literal types which we can use to let TypeScript narrow down the possible current type.
+
+```typescript
+interface Bird {
+  flyingSpeed: number;
+}
+
+interface Horse {
+  runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+
+function moveAnimal(animal: Animal) {
+  let speed;
+
+  // we cannot use instanceof here because Bird is interface not class
+  if (animal instanceof Bird) {
+    console.log('Moving with speed: ' + animal.flyingSpeed);
+  }
+}
+```
+
+so the solution for above issue is we add any field to the object for this case we add field `type`
+
+```typescript
+interface Bird {
+  type: 'bird'; // as literal type
+  flyingSpeed: number;
+}
+
+interface Horse {
+  type: 'horse'; // as literal type
+  runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+
+function moveAnimal(animal: Animal) {
+  let speed;
+  switch (animal.type) {
+    case 'bird':
+      speed = animal.flyingSpeed;
+      break;
+    case 'horse':
+      speed = animal.runningSpeed;
+      break;
+  }
+  console.log('Moving with speed: ' + animal.speed);
+}
+// during typing the type you will notice that Typescript aware about the type Bird and Horse
+moveAnimal({ type: 'bird', flyingSpeed: 10 });
 ```

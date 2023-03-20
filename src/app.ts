@@ -1,36 +1,26 @@
-class Car {
-  drive() {
-    console.log('Driving...');
-  }
+interface Bird {
+  type: 'bird'; // as literal type
+  flyingSpeed: number;
 }
 
-class Truck {
-  drive() {
-    console.log('Driving...');
-  }
-
-  loadCargo(amount: number) {
-    console.log('Loading cargo...' + amount);
-  }
+interface Horse {
+  type: 'horse'; // as literal type
+  runningSpeed: number;
 }
 
-type Vehicle = Car | Truck;
+type Animal = Bird | Horse;
 
-const v1 = new Car();
-const v2 = new Truck();
-
-function useVehicle(vehicle: Vehicle) {
-  vehicle.drive();
-
-  // we can use type guard `in` for this case but there is more elegant solution
-  // if ('loadCargo' in vehicle) {
-  //     vehicle.loadCargo(1000);
-  // }
-
-  if (vehicle instanceof Truck) {
-    vehicle.loadCargo(1000);
+function moveAnimal(animal: Animal) {
+  let speed;
+  switch (animal.type) {
+      case 'bird':
+          speed = animal.flyingSpeed;
+          break;
+      case 'horse':
+          speed = animal.runningSpeed;
+          break;
   }
+  console.log('Moving with speed: ' + speed);
 }
 
-useVehicle(v1);
-useVehicle(v2);
+moveAnimal({type: 'horse', runningSpeed: 100});
