@@ -1433,14 +1433,18 @@ Typescript support type casting there 2 ways for doing type casting in Typescrip
 option 1:
 
 ```typescript
-const userInputElement = <HTMLInputElement>document.getElementById('user-input')!;
+const userInputElement = <HTMLInputElement>(
+  document.getElementById('user-input')!
+);
 userInputElement.value = 'Hi There!';
 ```
 
 option 2:
 
 ```typescript
-const userInputElement = document.getElementById('user-input')! as HTMLInputElement;
+const userInputElement = document.getElementById(
+  'user-input'
+)! as HTMLInputElement;
 userInputElement.value = 'Hi There!';
 ```
 
@@ -1451,4 +1455,143 @@ const userInputElement = document.getElementById('user-input');
 if (userInputElement) {
   (userInputElement as HTMLInputElement).value = 'Hi There!';
 }
+```
+
+#### Index Properties
+
+Typescript have feature that allow us to create object which are more flexible regarding the property they might hold.
+
+```typescript
+interface ErrorContainer {
+  id: string; // this is still allowed because the property have same type with the index property
+  // we could using name for the index property placeholder
+  // example `[key: string]: string` or even `[foo: string]: string` also allowed
+  // but the best practice is using `prop` or `key` as the placeholder name
+  [prop: string]: string;
+  //age: number; // this will prompt error because the value of the property is number
+}
+
+const errorBag: ErrorContainer = {
+  email: 'Not a valid Email address!',
+  username: 'Must start with a capital character!'
+};
+
+function printErrorBag(errorBag: ErrorContainer) {
+  for (const prop in errorBag) {
+    console.log(errorBag[prop]);
+  }
+}
+
+printErrorBag(errorBag);
+```
+
+#### Function Overloads
+
+case example
+
+```typescript
+type Combinable = string | number;
+type Numeric = number | boolean;
+type Universal = Combinable & Numeric;
+
+function add(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  }
+  return a + b;
+}
+
+const result = add('Hery', ' Sehastian');
+result.split(' '); //this will prompt error because typescript detect the type as `Combinable` which we expect the return type should be string because we want to use string `split` method
+```
+
+to solve above issue we can use type casting e.g.
+
+```typescript
+type Combinable = string | number;
+type Numeric = number | boolean;
+type Universal = Combinable & Numeric;
+
+function add(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  }
+  return a + b;
+}
+
+const result = add('Hery', ' Sehastian') as string;
+result.split(' '); //this will not prompt error anymore
+```
+
+but there is another more better solution for this case which is using one of the Typescript feature that called function overload
+
+```typescript
+type Combinable = string | number;
+type Numeric = number | boolean;
+type Universal = Combinable & Numeric;
+
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+function add(a: number, b: string): string;
+function add(a: string, b: number): string;
+function add(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  }
+  return a + b;
+}
+
+const result = add('Hery', ' Sehastian');
+result.split(' '); //this will not prompt error anymore
+```
+
+#### Optional Chaining
+
+Case when we need to fetch data from API or any source and we unsure whether certain property exist or not we could use optional chaining when try to access the property
+
+```typescript
+interface Job {
+  title: string;
+  description: string;
+}
+
+interface UserData {
+  id: string;
+  name: string;
+  job?: Job;
+}
+
+const fetchUserData: UserData = {
+  id: 'u1',
+  name: 'Hery Sehastian'
+  // job: { title: 'CEO', description: 'Owner of the company' }
+};
+
+console.log(fetchUserData?.job.title); // this will not prompt error if the job property is not defined
+```
+
+#### Nullish Coalescing
+
+Typsscript 3.7 above support null coalesing.
+
+```typescript
+const data = null;
+const result = data ?? 'default';
+console.log(result); //output: 'default'
+
+const data = undefined;
+const result = data ?? 'default';
+console.log(result); //output: 'default'
+
+const data = '';
+const result = data ?? 'default';
+console.log(result); //output: ''
+
+const data = 0;
+const result = data ?? 'default';
+console.log(result); //output: 0
+
+const data = false;
+const result = data ?? 'default';
+console.log(result); //output: false
 ```
