@@ -1595,3 +1595,33 @@ const data = false;
 const result = data ?? 'default';
 console.log(result); //output: false
 ```
+
+### Generics
+
+#### Build-in Generics
+
+```typescipt
+const hobbies: Array<string> = []; // equal to string[]
+```
+
+#### Generic Function
+
+```typescript
+function merge<T, U>(objA: T, objB: U) {
+  return Object.assign(objA, objB);
+}
+
+const mergedObj = merge({ name: 'Hery', hobbies: ['Gaming'] }, { age: 35 });
+console.log(mergedObj.age);
+```
+
+#### Working with Constraints
+
+```typescript
+function merge<T extends object, U extends object>(objA: T, objB: U) {
+  return Object.assign(objA, objB);
+}
+
+const mergedObj = merge({ name: 'Hery', hobbies: ['Gaming'] }, { age: 35 });
+console.log(mergedObj.age);
+```
