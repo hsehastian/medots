@@ -1625,3 +1625,106 @@ function merge<T extends object, U extends object>(objA: T, objB: U) {
 const mergedObj = merge({ name: 'Hery', hobbies: ['Gaming'] }, { age: 35 });
 console.log(mergedObj.age);
 ```
+
+#### Another Generic Function
+
+```typescript
+interface Lengthy {
+  length: number;
+}
+
+function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
+  let descriptionText = 'Got no value';
+  if (element.length === 1) {
+    descriptionText = 'Got 1 element';
+  } else if (element.length > 1) {
+    descriptionText = 'Got ' + element.length + ' elements';
+  }
+
+  return [element, descriptionText];
+}
+
+console.log(countAndDescribe('Hello World')); // string have property length
+console.log(countAndDescribe(['Hello', 'World'])); // array have property length
+console.log(countAndDescribe(10)); // invalid because number dont have property length
+```
+
+#### The `keyof` Constraint
+
+```typescript
+function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+  return 'Value: ' + obj[key];
+}
+
+extractAndConvert({name: 'Hery'}, 'name'); // no error because object containt property `name`
+extractAndConvert({}, 'name'); //error because empty object dont have `name` property
+
+```
+
+#### Generic Classes
+
+```typescript
+class DataStorage<T extends string | number | boolean> {
+  private data: T[] = [];
+
+  addItem(item: T) {
+    this.data.push(item);
+  }
+
+  removeItem() {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
+    this.data.splice(this.data.indexOf(item), 1);
+  }
+
+  getItems() {
+    return [...this.data];
+  }
+}
+
+const stringStorage = new DataStorage<string>();
+stringStorage.addItem('Hery');
+stringStorage.addItem('John');
+stringStorage.removeItem('Hery');
+console.log(stringStorage.getItems()); //output: ['John']
+
+
+const numStorage = new DataStorage<number>();
+numStorage.addItem(1);
+numStorage.addItem(2);
+numStorage.removeItem(1);
+console.log(numStorage.getItems()); //output: [2]
+```
+
+#### Generic Utility Types
+
+For more utility types we can find it [here](https://www.typescriptlang.org/docs/handbook/utility-types.html)
+
+example for `Partial`
+
+```typescript
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(title: string, desc: string, date: Date) {
+  //using Partial allow us to construct the property 1 by 1
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = desc;
+  courseGoal.completeUntil = date;
+
+  return courseGoal as CourseGoal; //need to type cast it because the type still Partial<CourseGoal>
+}
+
+```
+
+example for `Readonly`
+
+```typescript
+const names: Readonly<string[]> = ['Hery', 'John'];
+names.push('Tono'); // this is error because Readonly dont allow this
+```
