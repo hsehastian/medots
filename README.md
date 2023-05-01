@@ -834,7 +834,7 @@ finance.describe();
 
 #### Inheritance
 
-- tips: use `super()` to call the constructor of the base class
+> **Tips:** use `super()` to call the constructor of the base class
 
 ```typescript
 class Department {
@@ -1663,6 +1663,10 @@ extractAndConvert({}, 'name'); //error because empty object dont have `name` pro
 
 #### Generic Classes
 
+More detail about [Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)
+
+== **TODO:** Need to revisit this section ==
+
 ```typescript
 class DataStorage<T extends string | number | boolean> {
   private data: T[] = [];
@@ -1728,3 +1732,184 @@ example for `Readonly`
 const names: Readonly<string[]> = ['Hery', 'John'];
 names.push('Tono'); // this is error because Readonly dont allow this
 ```
+
+### Decorators
+
+For more detail about decorator check [here](https://www.typescriptlang.org/docs/handbook/decorators.html#introduction)
+
+#### Decorator Factory
+Decorator Factory is a function that returns decorator function that will be called by the decorator at runtime.
+
+```typescript
+// when creating decorator we usually use upper case for the 1st Letter
+function Logger(logString: string) {
+  return function(constructor: Function) {
+    console.log(logString);
+    console.log(constructor);
+  }
+}
+
+@Logger('Logging - Person')
+class Person {
+  name = 'Hery';
+
+  constructor() {
+    console.log('Creating person object');
+  }
+}
+
+const person = new Person();
+console.log(person);
+```
+
+#### Class Decorator
+
+```typescript
+// when creating class decorator we will receive constructor of the class
+function Logger(constructor: Function) {
+  console.log('Logging...');
+  console.log(constructor);
+}
+
+@Logger
+class Product {
+  title: string;
+  private _price: number;
+
+  set price(value: number) {
+    this._price = value;
+  }
+
+  constructor(title: string) {
+    this.title = title;
+  }
+
+  getPriceWithTax(tax: number) {
+    return this._price * (1 + tax);
+  }
+}
+
+const product = new Product('PC');
+console.log(product);
+```
+
+#### Property Decorator
+
+```typescript
+// when creating property decorator we will receive target and property name
+function Logger(target: any, propertyName: string | Symbol) {
+  console.log('Property decorator');
+  console.log(target, propertyName);
+}
+
+class Person {
+  @Logger
+  name = 'Hery';
+
+  constructor() {
+    console.log('Creating person object');
+  }
+}
+
+const person = new Person();
+console.log(person);
+```
+
+#### Accessor Decorator
+
+```typescript
+// when creating accessor decorator we will receive target, name of the accessor and property descriptor
+function Logger(target: any, name: string, descriptor: PropertyDescriptor) {
+  console.log('Accessor decorator');
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+class Product {
+  title: string;
+  private _price: number;
+
+  @Logger
+  set price(value: number) { // this is the setter
+    this._price = value;
+  }
+
+  constructor(title: string) {
+    this.title = title;
+  }
+
+  getPriceWithTax(tax: number) {
+    return this._price * (1 + tax);
+  }
+}
+
+const product = new Product('PC');
+console.log(product); 
+```
+
+#### Method Decorator
+
+```typescript
+// when creating method decorator we will receive target, name of method and property descriptor
+function Logger(target: any, name: string | Symbol, descriptor: PropertyDescriptor) {
+  console.log('Method decorator');
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+class Product {
+  title: string;
+  private _price: number;
+
+  set price(value: number) {
+    this._price = value;
+  }
+
+  constructor(title: string) {
+    this.title = title;
+  }
+
+  @Logger
+  getPriceWithTax(tax: number) {
+    return this._price * (1 + tax);
+  }
+}
+
+const product = new Product('PC');
+console.log(product);
+```
+
+#### Parameter Decorator
+
+```typescript
+// when creating parameter decorator we will receive target, name of method that parameter use and position of the parameter e.g. 1st argument or 2nd argument depends on the parameter position
+function Logger(target: any, name: string | Symbol, position: number) {
+  console.log('Parameter decorator');
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+class Product {
+  title: string;
+  private _price: number;
+
+  set price(value: number) {
+    this._price = value;
+  }
+
+  constructor(title: string) {
+    this.title = title;
+  }
+  // for this case the position of the parameter is the 1st argument
+  getPriceWithTax(@Logger tax: number) {
+    return this._price * (1 + tax);
+  }
+}
+
+const product = new Product('PC');
+console.log(product);
+```
+> We could apply multiple decorator in same class, property, method and accessor, but we need to aware of the execution sequence. More detail can check [here](https://www.typescriptlang.org/docs/handbook/decorators.html#decorator-evaluation)
